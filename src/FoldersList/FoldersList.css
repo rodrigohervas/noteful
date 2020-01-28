@@ -1,0 +1,11 @@
+.foldersList {
+    background-color: burlywood;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    min-width: 300px;
+    height: 100%;
+}

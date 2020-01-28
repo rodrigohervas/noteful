@@ -1,0 +1,9 @@
+.notesList {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    width: 800px;
+    background-color: brown;
+}
