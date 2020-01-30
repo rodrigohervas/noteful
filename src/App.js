@@ -3,9 +3,11 @@ import './App.css';
 import { Route, Switch } from 'react-router-dom';
 import Nav from './Nav/Nav';
 import FoldersList from './FoldersList/FoldersList';
-import data from './dummy-store';
+// import data from './dummy-store';
 import NotesList from './NotesList/NotesList';
-import NoteDetails from './NoteDetails/NoteDetails';
+import Note from './Note/Note';
+import NotefulContext from './contexts/NotefulContext';
+import config from './config/config';
 
 
 class App extends Component {
@@ -13,55 +15,100 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        notes: data.notes, //notes: [],
-        folders: data.folders //folders: []
+        notes: [],
+        folders: []
     }
   }
 
+  getData(url, setFunction) {
+    fetch(url, {
+      method: 'GET',
+    })
+    .then(res => {
+      if (!res.ok) {
+        throw new Error(res.status)
+      }
+      return res.json()
+    })
+    .then(data => setFunction(data))
+    .catch(error => this.setState({ error }))
+  }
+
   componentDidMount() {
-      this.setState({
-        notes: data.notes, 
-        folders: data.folders,
+      //do 2 fetch actions to get folders and notes
+      this.getData(config.foldersUrl, this.setFolders)
+      this.getData(config.notesUrl, this.setNotes)
+  }
+
+  setNotes = (notes) => {
+    this.setState({
+      notes: notes, 
     })
   }
 
-  getNote(id) {
-    return this.state.notes.find(note => note.id === id);
+  setFolders = (folders) => {
+    this.setState({
+      folders: folders,
+    })
+  }
+
+  handleDeleteNote = (id) => {
+    const newNotes = this.state.notes.filter(note => note.id !== id);
+    this.setNotes(newNotes);
+    //this.context.selectedNote = null;
+    //this.props.history.push('/');
   }
 
   render() {
-
-    const {notes, folders} = this.state;
+    //load state values into a contextValue object, to pass it in the provider
+    const contextValue = {
+      notes: this.state.notes, 
+      folders: this.state.folders, 
+      deleteNote: this.handleDeleteNote, 
+    };
 
     return (
       <div className="App">
         <div className='container'>
-          
-          <header>
-            <Nav />
-          </header>
-          <div className="container-main">
-            <Switch>
-              <Route exact path='/note/:noteId' render={ (routeProps) => {
-                                                            const noteId = routeProps.match.params.noteId;
-                                                            const folderId = this.getNote(noteId).folderId;
-                                                            const folderName = this.state.folders.find(folder => folder.id === folderId).name;
-                                                            return <FoldersList {...routeProps} folderName={folderName}/> 
-                                                          } 
-                                                          }/>
-              <Route path='/' render={ () => <FoldersList folders={folders}/> } />
-            </Switch>
-            <main>
+          <NotefulContext.Provider value={contextValue}>
+            <header>
+              <Nav />
+            </header>
+            <div className="container-main">
               <Switch>
-                <Route exact path='/' render={ () => <NotesList notes={notes}/> } />
-                <Route path='/folder/:folderId' render={ (routeProps) => <NotesList notes={notes} folderId={routeProps.match.params.folderId}/> } />
-                <Route path='/note/:noteId' render={ (routeProps) => <NoteDetails note={this.getNote(routeProps.match.params.noteId)} noteId={routeProps.match.params.noteId} /> } />
+
+                <Route 
+                  exact 
+                  path='/note/:noteId' 
+                  component={FoldersList} />
+
+                <Route 
+                  path='/' 
+                  component={FoldersList} />
+
               </Switch>
-            </main>
-          </div>
+              <main>
+                <Switch>
+                  
+                  <Route 
+                    exact 
+                    path='/' 
+                    component={NotesList} />
+                  
+                  <Route 
+                    path='/folder/:folderId' 
+                    component={NotesList} />
+
+                  <Route 
+                    path='/note/:noteId' 
+                    component={NotesList} />
+                
+                </Switch>
+              </main>
+            </div>
+          </NotefulContext.Provider>
           
-  
-          </div>
+        </div>
       </div>
     );
   }

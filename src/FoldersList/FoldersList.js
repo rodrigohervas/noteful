@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './FoldersList.css';
 import Folder from '../Folder/Folder';
+import NotefulContext from '../contexts/NotefulContext';
 
 class FoldersList extends Component {
 
@@ -10,6 +11,8 @@ class FoldersList extends Component {
             folders: [], 
         }
     }
+
+    static contextType = NotefulContext;
 
     getFolders() {
         this.setState({
@@ -21,29 +24,36 @@ class FoldersList extends Component {
         this.getFolders();
     }
 
-    renderFolders() {
-        if(this.props.folders) {
-            return this.props.folders.map( (folder) => {
-                return <Folder key={folder.id} folder={folder}/>
-            });
-        }
+    handleGoBack = () => {
+        this.context.selectedFolder = null;
+        this.context.selectedNote = null;
+        this.props.history.push('/');
     }
 
     render() {
-        const folders = this.renderFolders();
+        let {folders, selectedFolder} = this.context;
+        
+        //when a folder is selected: load only selected folders for rendering
+        if(selectedFolder) {
+            folders = folders.filter(folder => (folder.id === selectedFolder) );
+        }
         
         return(
             <div className="foldersList">
-                {folders}
-                {folders && <button type="button">Add folder</button>}
+                
+                {/* render folders */}
+                {(folders) && 
+                    folders.map( (folder) => <Folder key={folder.id} folder={folder}/> ) }
+
+                {/* render Add folder button */}
+                {(folders.length > 1) && <button type="button">Add folder</button>}
                  
-                {
-                    !folders && 
+                {/* mark the selected folder as selected!!! */}
+                {folders.length <= 1  && 
                     <div>
-                        <button type="button" onClick={ () => this.props.history.goBack() } >Go Back</button> 
-                        <h3>{this.props.folderName}</h3>
-                    </div>
-                }
+                        <button type="button" onClick={ this.handleGoBack } >Go Back</button> 
+                        <h3>{folders.folderName}</h3>
+                    </div> }
             </div>
         );
     }
