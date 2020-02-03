@@ -57,7 +57,7 @@ class FoldersList extends Component {
         let folderName = null;
         
         //when a folder is selected: load only selected folder for rendering
-        //when a folder is selected, mark that folde rbut render all
+        //when a folder is selected, mark that folder but render all
         if(selectedFolder) {
             //folders = folders.filter(folder => (folder.id === selectedFolder) );
             const folder = folders.find(folder => (folder.id === selectedFolder) );

@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import './AddForm.css';
 import config, {generateId} from '../config/config';
 import NotefulContext from '../contexts/NotefulContext';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
@@ -94,7 +95,7 @@ class AddFolder extends Component {
                 <h2>Add Folder</h2> 
                 
                 <div className="form-group">
-                    <label htmlFor="name"> Folder Name </label>
+                    <label htmlFor="name"> Folder Name: </label>
                     <input 
                         type="text" 
                         name="folderName" 

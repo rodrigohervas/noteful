@@ -73,10 +73,8 @@ class App extends Component {
   }
 
   getFolderByNoteId = (noteId) => {
-    console.log('noteId: ', noteId)
     const note = this.state.notes.find(note => note.id === noteId);
     const folder = this.state.folders.find(folder => folder.id === note.folderId);
-    console.log('found folder: ', folder)
     return folder;
   }
 
@@ -103,11 +101,6 @@ class App extends Component {
             </header>
             <div className="container-main">
               <Switch>
-
-              {/* <Route 
-                    path='/folder/:folderId' 
-                    render={(props) => <FoldersList props={props} folders={this.state.folders} /> } 
-                    test={'test folders'} /> */}
               
               <Route 
                 path='/folder/:folderId' 
@@ -139,15 +132,6 @@ class App extends Component {
                     path='/note/:noteId' 
                     component={NotesList} >
                   </Route>
-
-                  {/* Route passing props and noteId and folder
-                  <Route 
-                    path='/note/:noteId'
-                    render={ (props, notes) => <NotesList 
-                                              {...props} 
-                                              noteId={props.match.params.noteId} 
-                                              folder={this.getFolderByNoteId(props.match.params.noteId)} /> }  
-                    /> */}
 
                   <NotesError>
                     <Route 

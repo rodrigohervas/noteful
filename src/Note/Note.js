@@ -95,6 +95,4 @@ class Note extends Component {
     }
 }
 
-//Since Note component was rendered without React Router (in NotesList) we need to add the HOC withRouter() 
-// to add the Route props history, match and location
 export default withRouter(Note);

@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import '../AddFolder/AddForm.css';
 import config, {generateId} from '../config/config';
 import NotefulContext from '../contexts/NotefulContext';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
@@ -88,8 +89,6 @@ class AddNote extends Component {
             body: JSON.stringify(note)
         };
 
-        //console.log('note: ', note)
-
         fetch(url, options)
             .then(response => {
                 if(!response.ok) {
@@ -146,7 +145,7 @@ class AddNote extends Component {
                 <h2>Add Note</h2> 
                 
                 <div className="form-group">
-                    <label htmlFor="noteName"> Name </label>
+                    <label htmlFor="noteName"> Name: </label>
                     <input 
                         type="text" 
                         name="noteName" 
@@ -157,12 +156,7 @@ class AddNote extends Component {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="noteContent"> Content </label>
-                    {/* <input 
-                        type="text" 
-                        name="noteContent" 
-                        id="noteContent"
-                        onChange={ e => this.updateNoteContent(e.target.value) } /> */}
+                    <label htmlFor="noteContent"> Content: </label>
                     <textarea 
                         name="noteContent" 
                         id="noteContent"
@@ -172,7 +166,7 @@ class AddNote extends Component {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="folderSelected"> Folder </label>
+                    <label htmlFor="folderSelected"> Folder: </label>
                     <select  
                         name="folderSelected"
                         id="folderSelected" 
