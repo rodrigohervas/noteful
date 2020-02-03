@@ -1,6 +1,6 @@
 # noteful app 
 
-Sample app using react Routing and Context
+App using react Routing and Context
 
 ## technologies used:
 
