@@ -16,7 +16,9 @@ class Nav extends Component {
 
         return(
             <div className="nav">
-                <NavLink onClick={this.clearSelectedFolder} to='/'><h1>Noteful</h1></NavLink>            
+                               
+                <NavLink onClick={this.clearSelectedFolder} to='/'><h1>Noteful</h1></NavLink>
+                
             </div>
         );
     }

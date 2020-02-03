@@ -3,11 +3,12 @@ import './App.css';
 import { Route, Switch } from 'react-router-dom';
 import Nav from './Nav/Nav';
 import FoldersList from './FoldersList/FoldersList';
-// import data from './dummy-store';
 import NotesList from './NotesList/NotesList';
-import Note from './Note/Note';
 import NotefulContext from './contexts/NotefulContext';
 import config from './config/config';
+import AddFolder from './AddFolder/AddFolder';
+import AddNote from './AddNote/AddNote';
+import NotesError from './ErrorBoundary/NotesError';
 
 
 class App extends Component {
@@ -20,7 +21,7 @@ class App extends Component {
     }
   }
 
-  getData(url, setFunction) {
+  getData(url, callBackFunction) {
     fetch(url, {
       method: 'GET',
     })
@@ -30,7 +31,7 @@ class App extends Component {
       }
       return res.json()
     })
-    .then(data => setFunction(data))
+    .then(data => callBackFunction(data))
     .catch(error => this.setState({ error }))
   }
 
@@ -52,33 +53,68 @@ class App extends Component {
     })
   }
 
+  //update state deleting the new folder
   handleDeleteNote = (id) => {
     const newNotes = this.state.notes.filter(note => note.id !== id);
     this.setNotes(newNotes);
-    //this.context.selectedNote = null;
-    //this.props.history.push('/');
+  }
+
+  //update state adding the new folder
+  handleAddFolder = (folder) => {
+    const folders = this.state.folders;
+    const newFolders = [...folders, folder];
+    this.setFolders(newFolders);
+  }
+
+  handleAddNote = (note) => {
+    const notes = this.state.notes;
+    const newNotes = [...notes, note];
+    this.setNotes(newNotes);
+  }
+
+  getFolderByNoteId = (noteId) => {
+    console.log('noteId: ', noteId)
+    const note = this.state.notes.find(note => note.id === noteId);
+    const folder = this.state.folders.find(folder => folder.id === note.folderId);
+    console.log('found folder: ', folder)
+    return folder;
   }
 
   render() {
-    //load state values into a contextValue object, to pass it in the provider
+    //load state values into a contextValue object, to pass it in the context provider
     const contextValue = {
       notes: this.state.notes, 
       folders: this.state.folders, 
       deleteNote: this.handleDeleteNote, 
+      addFolder: this.handleAddFolder, 
+      addNote: this.handleAddNote
     };
 
     return (
       <div className="App">
         <div className='container'>
+
+
           <NotefulContext.Provider value={contextValue}>
             <header>
-              <Nav />
+              <NotesError>
+                <Nav />
+              </NotesError>
             </header>
             <div className="container-main">
               <Switch>
 
+              {/* <Route 
+                    path='/folder/:folderId' 
+                    render={(props) => <FoldersList props={props} folders={this.state.folders} /> } 
+                    test={'test folders'} /> */}
+              
+              <Route 
+                path='/folder/:folderId' 
+                component={FoldersList} />
+
                 <Route 
-                  exact 
+                  exact
                   path='/note/:noteId' 
                   component={FoldersList} />
 
@@ -101,12 +137,33 @@ class App extends Component {
 
                   <Route 
                     path='/note/:noteId' 
-                    component={NotesList} />
+                    component={NotesList} >
+                  </Route>
+
+                  {/* Route passing props and noteId and folder
+                  <Route 
+                    path='/note/:noteId'
+                    render={ (props, notes) => <NotesList 
+                                              {...props} 
+                                              noteId={props.match.params.noteId} 
+                                              folder={this.getFolderByNoteId(props.match.params.noteId)} /> }  
+                    /> */}
+
+                  <NotesError>
+                    <Route 
+                      path='/addfolder'
+                      component={AddFolder} />
+
+                    <Route 
+                      path='/addnote'
+                      component={AddNote} />  
+                  </NotesError>
                 
                 </Switch>
               </main>
             </div>
           </NotefulContext.Provider>
+
           
         </div>
       </div>

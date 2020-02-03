@@ -1,10 +1,56 @@
 .App {
-  text-align: center;
+    height: 100%;
+    text-align: center;
+    font-family: 'Open Sans', sans-serif, serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: #2B2B2B;
+    height: 100%;
+
 }
 
 .container-main {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-start;
+    /* background-color: #D6ECFB; #90CCF4; */
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    height: 100%;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: auto;
+}
+
+form {
+    background-color: #00C5BE;
+    border: none;
+    color: #fff;
+    font-size: 1em;
+    padding: 10px 50px;
+    text-transform: uppercase;
+    font-weight: normal;
+}
+
+
+button {
+    border: 2px solid #163B11;
+    border-radius: 2px;
+    margin: 15px 0px;
+    padding: 10px;
+    width: 150px;
+
+    font-size: 20px;
+    background-color: #FF7C51;
+}
+
+.add-button {
+    background-color: #4ED83C;
+    align-items: flex-end;
 }

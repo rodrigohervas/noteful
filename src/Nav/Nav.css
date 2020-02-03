@@ -6,10 +6,19 @@
     
     padding: 0;
     margin: 0;
-    height: 150px;
-    background-color: #C0C0C0;
+    height: 125px;
+    box-shadow: 0px 2px 10px #447C8C;
+    background-image: 
+        linear-gradient(rgba(207, 244, 255, 0.7), rgba(207, 244, 255, 0.7)),
+        url(../img/postits-header.jpg);
 }
 
 a {
+    font-family: 'Patrick Hand', 'Playfair Display', 'Montserrat', 'Lato', 'Roboto', 'Open Sans', sans-serif, serif;
+    font-size: 42px;
+    font-style: italic;
+    font-weight: 600;
     text-decoration: none;
+    color: rgb(32, 28, 28);
+    ;
 }

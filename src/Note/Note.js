@@ -1,12 +1,29 @@
 import React, {Component} from 'react';
+import './Note.css';
 import {Link} from 'react-router-dom';
 import NotefulContext from '../contexts/NotefulContext';
 import config from '../config/config';
+import {withRouter} from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 
 class Note extends Component {
 
     static contextType = NotefulContext;
+
+    static defaultProps = {
+        note: {}, 
+        history: {
+            push: () => {},
+        }
+    }
+
+    static propTypes = {
+        note: PropTypes.object.isRequired, 
+        history: PropTypes.shape({
+            push: PropTypes.func.isRequired,
+        }).isRequired
+    }
 
     handleDelete = (id) => {
         const url = `${config.notesUrl}/${id}`;
@@ -44,7 +61,7 @@ class Note extends Component {
     render() {
 
         let note = this.props.note;
-        
+                
         //if note is selected, render only that note
         if(this.context.selectedNote) {
             note = this.context.notes.find(note => note.id === this.context.selectedNote);
@@ -56,6 +73,7 @@ class Note extends Component {
                 <>
                 <h4>
                     <Link 
+                        className="note-header"
                         to={`/note/${note.id}`} 
                         onClick={() => this.handleSelectedNote(note)} >{note.name}</Link>
                 </h4>
@@ -66,10 +84,10 @@ class Note extends Component {
                 
                 {this.context.selectedNote &&  
                     <>    
-                        <h4>{note.name}</h4>                
+                        <h4 className="note-header">{note.name}</h4>                
                         <p>Date modified: {note.modified}</p>
                         <button onClick={() => this.handleDelete(note.id)} >Delete</button>
-                        <p>{note.content}</p>
+                        <p className="note-content">{note.content}</p>
                     </> }
 
             </div>
@@ -77,4 +95,6 @@ class Note extends Component {
     }
 }
 
-export default Note;
+//Since Note component was rendered without React Router (in NotesList) we need to add the HOC withRouter() 
+// to add the Route props history, match and location
+export default withRouter(Note);

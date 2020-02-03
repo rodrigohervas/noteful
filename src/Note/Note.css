@@ -1,0 +1,26 @@
+.note-header {
+    font-family: 'Playfair Display', 'Open Sans', sans-serif, serif;
+    font-size: 32px;
+    font-weight: 600;
+}
+
+.note {
+    font-family: 'Open Sans', sans-serif, serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    letter-spacing: 1px;
+    line-height: 34px;
+
+    border: 2px solid #2176AE; 
+    border-radius: 3px;
+    background-color: #CFF4FF; /*#93D4FF;*/
+    
+    width: 800px;
+    margin: 30px;
+    padding: 20px;
+}
+
+.note-content {    
+    text-align: justify;
+}
