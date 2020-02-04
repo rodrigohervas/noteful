@@ -39,3 +39,7 @@ button {
     background-color: #4ED83C;
     align-items: flex-end;
 }
+
+a:focus, button:focus, input:focus {
+    border: 2px solid blue !important;
+}

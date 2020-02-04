@@ -84,6 +84,10 @@ class AddFolder extends Component {
         }
     }
 
+    handleCancel = () => {
+        this.props.history.push('/');
+    }
+
     render() {
         
         return(
@@ -99,7 +103,9 @@ class AddFolder extends Component {
                     <input 
                         type="text" 
                         name="folderName" 
-                        id="folderName"
+                        id="folderName" 
+                        aria-label="folder name" 
+                        aria-required="true" 
                         onChange={ e => this.updateFolderName(e.target.value) } 
                     />
                     {this.state.folderName.touched && 
@@ -107,7 +113,7 @@ class AddFolder extends Component {
                 </div>
                 
                 <div className="button-group">
-                    <button type="reset" className="form-button">
+                    <button onClick={this.handleCancel} type="reset" className="form-button">
                         Cancel
                     </button>
                     <button 

@@ -8,6 +8,7 @@ const NotefulContext = React.createContext({
     deleteNote: () => {},
     addFolder: () => {},
     addNote: () => {},
+    inFocus: false
 });
 
 export default NotefulContext;

@@ -5,6 +5,14 @@ import NotefulContext from '../contexts/NotefulContext';
 
 class Nav extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            inFocus: false,
+        }
+        this.inFocus = React.createRef();
+    }
+
     static contextType = NotefulContext;
 
     clearSelectedFolder = () => {
@@ -12,12 +20,18 @@ class Nav extends Component {
         this.context.selectedNote = null;
     }
 
+    componentWillUpdate(prevState, state) {
+        if(prevState.inFocus !== state.inFocus) {
+            this.inFocus.current.focus();
+        }
+    }
+
     render() {
 
         return(
             <div className="nav">
                                
-                <NavLink onClick={this.clearSelectedFolder} to='/'><h1>Noteful</h1></NavLink>
+                <NavLink ref={this.inFocus} onClick={this.clearSelectedFolder} to='/'><h1>Noteful</h1></NavLink>
                 
             </div>
         );

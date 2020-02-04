@@ -100,6 +100,7 @@ class AddNote extends Component {
             })
             .then(data => {
                 this.context.addNote(data);
+                this.context.inFocus = true;
                 this.props.history.push('/');
             })
             .catch(error => {
@@ -129,6 +130,10 @@ class AddNote extends Component {
         }
     }
 
+    handleCancel = () => {
+        this.props.history.push('/');
+    }
+
     render() {
 
         const folders = this.context.folders;
@@ -149,7 +154,9 @@ class AddNote extends Component {
                     <input 
                         type="text" 
                         name="noteName" 
-                        id="noteName"
+                        id="noteName" 
+                        aria-label="note name" 
+                        aria-required="true" 
                         onChange={ e => this.updateNoteName(e.target.value) } />
                     {this.state.noteName.touched && 
                                             <ErrorMessage message={this.validateNoteName()} /> }
@@ -159,7 +166,9 @@ class AddNote extends Component {
                     <label htmlFor="noteContent"> Content: </label>
                     <textarea 
                         name="noteContent" 
-                        id="noteContent"
+                        id="noteContent" 
+                        aria-label="note content" 
+                        aria-required="true" 
                         onChange={ e => this.updateNoteContent(e.target.value) } />
                     {this.state.noteContent.touched && 
                                             <ErrorMessage message={this.validateNoteContent()} /> }
@@ -170,6 +179,8 @@ class AddNote extends Component {
                     <select  
                         name="folderSelected"
                         id="folderSelected" 
+                        aria-label="select folder name" 
+                        aria-required="true" 
                         onChange={ e => this.updateFolderSelected(e.target.value) } >
                         <option>Select a folder</option>
                         { options }
@@ -179,7 +190,7 @@ class AddNote extends Component {
                 </div>
                 
                 <div className="button-group">
-                    <button type="reset" className="form-button">
+                    <button onClick={this.handleCancel} type="reset" className="form-button">
                         Cancel
                     </button>
                     <button 
