@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import { Route, Switch } from 'react-router-dom';
 import Nav from './Nav/Nav';
@@ -11,17 +11,15 @@ import AddNote from './AddNote/AddNote';
 import NotesError from './ErrorBoundary/NotesError';
 
 
-class App extends Component {
+function App() {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-        notes: [],
-        folders: []
-    }
-  }
+  const [notes, setNotes] = useState([])
+  const [folders, setFolders] = useState([])
+  const [selectedNote, setSelectedNote] = useState(null)
+  const [selectedFolder, setSelectedFolder] = useState(null)
+  const [error, setError] = useState(null)
 
-  getData(url, callBackFunction) {
+  function getData(url, callBackFunction) {
     fetch(url, {
       method: 'GET',
     })
@@ -32,127 +30,125 @@ class App extends Component {
       return res.json()
     })
     .then(data => callBackFunction(data))
-    .catch(error => this.setState({ error }))
+    .catch(error => setError(error))
   }
 
-  componentDidMount() {
-      //do 2 fetch actions to get folders and notes
-      this.getData(config.foldersUrl, this.setFolders)
-      this.getData(config.notesUrl, this.setNotes)
-  }
-
-  setNotes = (notes) => {
-    this.setState({
-      notes: notes, 
-    })
-  }
-
-  setFolders = (folders) => {
-    this.setState({
-      folders: folders,
-    })
-  }
-
+  useEffect( () => {
+    //do 2 fetch actions to get folders and notes
+    getData(config.foldersUrl, setFolders)
+    getData(config.notesUrl, setNotes)
+  }, [])
+  
   //update state deleting the new folder
-  handleDeleteNote = (id) => {
-    const newNotes = this.state.notes.filter(note => note.id !== id);
-    this.setNotes(newNotes);
+  const handleDeleteNote = (id) => {
+    const newNotes = notes.filter(note => note.id !== id);
+    setNotes(newNotes);
   }
 
   //update state adding the new folder
-  handleAddFolder = (folder) => {
-    const folders = this.state.folders;
+  const handleAddFolder = (folder) => {
     const newFolders = [...folders, folder];
-    this.setFolders(newFolders);
+    setFolders(newFolders);
   }
 
-  handleAddNote = (note) => {
-    const notes = this.state.notes;
+  const handleSelectFolder = (id) => {
+    setSelectedFolder(id)
+  }
+
+  const handleSelectNote = (id) => {
+    setSelectedNote(id)
+  }
+
+  const handleAddNote = (note) => {
     const newNotes = [...notes, note];
-    this.setNotes(newNotes);
+    setNotes(newNotes);
   }
 
-  getFolderByNoteId = (noteId) => {
-    const note = this.state.notes.find(note => note.id === noteId);
-    const folder = this.state.folders.find(folder => folder.id === note.folderId);
-    return folder;
-  }
+  return (
+    <div className="App">
+      <div className='container'>
 
-  render() {
-    //load state values into a contextValue object, to pass it in the context provider
-    const contextValue = {
-      notes: this.state.notes, 
-      folders: this.state.folders, 
-      deleteNote: this.handleDeleteNote, 
-      addFolder: this.handleAddFolder, 
-      addNote: this.handleAddNote
-    };
-
-    return (
-      <div className="App">
-        <div className='container'>
-
-
-          <NotefulContext.Provider value={contextValue}>
-            <header>
-              <NotesError>
-                <Nav />
-              </NotesError>
-            </header>
-            <div className="container-main">
-              <Switch>
-              
-              <Route 
-                path='/folder/:folderId' 
-                component={FoldersList} />
-
-                <Route 
-                  exact
-                  path='/note/:noteId' 
-                  component={FoldersList} />
-
-                <Route 
-                  path='/' 
-                  component={FoldersList} />
-
-              </Switch>
-              <main>
-                <Switch>
-                  
-                  <Route 
-                    exact 
-                    path='/' 
-                    component={NotesList} />
-                  
-                  <Route 
-                    path='/folder/:folderId' 
-                    component={NotesList} />
-
-                  <Route 
-                    path='/note/:noteId' 
-                    component={NotesList} >
-                  </Route>
-
-                  <NotesError>
-                    <Route 
-                      path='/addfolder'
-                      component={AddFolder} />
-
-                    <Route 
-                      path='/addnote'
-                      component={AddNote} />  
-                  </NotesError>
-                
-                </Switch>
-              </main>
-            </div>
-          </NotefulContext.Provider>
-
+        <header>
+          <NotesError>
+            <Nav onSelectFolder={handleSelectFolder} onSelectNote={handleSelectNote} />
+          </NotesError>
+        </header>
+        <div className="container-main">
+          <Switch>
           
+            <Route path='/folder/:id' >
+              <FoldersList 
+                folders={folders}
+                selectedFolder={selectedFolder} 
+                onSelectFolder={handleSelectFolder}
+              />
+            </Route>
+            
+            <Route exact path='/note/:id' >
+              <FoldersList
+                 folders={folders}
+                 selectedFolder={selectedFolder} 
+                 folderName={ folders.filter(folder => folder.id === selectedFolder).name }
+                 selectedNote={selectedNote} 
+              />
+            </Route>
+
+            <Route exact path='/' >
+              <FoldersList 
+                folders={folders}
+                selectedFolder={selectedFolder} 
+                onSelectFolder={handleSelectFolder}
+              />
+            </Route>
+
+          </Switch>
+          <main>
+            <Switch>
+              
+              <Route exact path='/' >
+                <NotesList 
+                  notes={notes} 
+                  onDeleteNote={handleDeleteNote} 
+                  onSelectNote={handleSelectNote} 
+                />
+              </Route> 
+              
+              <Route path='/folder/:id' >
+                <NotesList 
+                  notes={ notes.filter(note => note.folder_id === selectedFolder) } 
+                  onDeleteNote={handleDeleteNote} 
+                  onSelectNote={handleSelectNote} 
+                /> 
+              </Route>
+
+              <Route path='/note/:id' >
+                <NotesList 
+                  notes={notes.filter( note => note.id === selectedNote)} 
+                  onDeleteNote={handleDeleteNote} 
+                  onSelectNote={handleSelectNote} 
+                  selectedNote={selectedNote} 
+                />
+              </Route>
+
+              <NotesError>
+                
+                <Route path='/addfolder' >
+                  <AddFolder onAddFolder={handleAddFolder}/>
+                </Route>
+                
+                <Route path='/addnote' >
+                  <AddNote folders={folders} onAddNote={handleAddNote} onSelectFolder={handleSelectFolder}  />
+                </Route>
+
+              </NotesError>
+            
+            </Switch>
+          </main>
         </div>
+
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default App;

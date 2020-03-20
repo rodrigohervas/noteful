@@ -4,6 +4,7 @@ import Folder from '../Folder/Folder';
 import NotefulContext from '../contexts/NotefulContext';
 import NotesError from '../ErrorBoundary/NotesError';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom'
 
 class FoldersList extends Component {
 
@@ -49,28 +50,14 @@ class FoldersList extends Component {
     }
 
     handleAddFolder = () => {
+        console.log('goto /addfolder')
+        console.log(this.props.history)
         this.props.history.push('/addfolder');
     }
 
     render() {
-        let {folders, notes, selectedFolder, selectedNote} = this.context;
-        let folderName = null;
         
-        //when a folder is selected: load only selected folder for rendering
-        //when a folder is selected, mark that folder but render all
-        if(selectedFolder) {
-            //folders = folders.filter(folder => (folder.id === selectedFolder) );
-            const folder = folders.find(folder => (folder.id === selectedFolder) );
-            folderName = folder.name;
-        }
-
-        //when a note is selected: load only the folder name and GoBack button
-        if(selectedNote) {
-            const note = notes.find(note => note.id === selectedNote);
-            const folder = folders.find(folder => folder.id === note.folderId);
-            folderName = folder.name;
-            folders = [];
-        }
+        const { folders, onSelectFolder, selectedFolder, selectedNote, folderName } = this.props
         
         return(
             <NotesError>
@@ -78,14 +65,18 @@ class FoldersList extends Component {
                     
                     {/* render folders */}
                     {(folders) && 
-                        folders.map( (folder) => <Folder key={folder.id} folder={folder}/> ) }
+                        folders.map( (folder) => <Folder 
+                                                    key={folder.id} 
+                                                    folder={folder} 
+                                                    onSelectFolder={onSelectFolder} />
+                                            ) }
 
                     {/* render Add folder button */}
                     {(folders.length > 1) && 
                         <button
                             className="add-button" 
                             type="button" 
-                            onClick={ this.handleAddFolder }
+                            onClick={this.handleAddFolder }
                             >Add folder</button>}
 
                     {/* mark the selected folder as selected */}
@@ -102,4 +93,4 @@ class FoldersList extends Component {
     }
 }
 
-export default FoldersList;
+export default withRouter(FoldersList);

@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {NavLink} from 'react-router-dom';
 import './Nav.css';
-import NotefulContext from '../contexts/NotefulContext';
 
 class Nav extends Component {
 
@@ -13,11 +12,9 @@ class Nav extends Component {
         this.inFocus = React.createRef();
     }
 
-    static contextType = NotefulContext;
-
     clearSelectedFolder = () => {
-        this.context.selectedFolder = null;
-        this.context.selectedNote = null;
+        this.props.onSelectFolder(null);
+        this.props.onSelectNote(null);
     }
 
     componentWillUpdate(prevState, state) {

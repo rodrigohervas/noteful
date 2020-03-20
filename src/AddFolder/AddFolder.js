@@ -4,6 +4,7 @@ import config, {generateId} from '../config/config';
 import NotefulContext from '../contexts/NotefulContext';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import PropTypes from 'prop-types';
+import {withRouter} from 'react-router-dom'
 
 
 class AddFolder extends Component {
@@ -45,10 +46,8 @@ class AddFolder extends Component {
         e.preventDefault();
 
         const folderName = this.state.folderName.value; 
-        const id = generateId(folderName);
         const url = config.foldersUrl;
         const folder = {
-            id: id,
             name: folderName
         }
         const options = { 
@@ -69,7 +68,8 @@ class AddFolder extends Component {
                 return response.json()
             })
             .then(data => {
-                this.context.addFolder(data);
+                //this.props.onAddFolder(data);
+                this.props.onAddFolder(data)
                 this.props.history.push('/');
             })
             .catch(error => {
@@ -130,4 +130,4 @@ class AddFolder extends Component {
     }
 }
 
-export default AddFolder;
+export default withRouter(AddFolder);

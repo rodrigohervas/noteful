@@ -6,8 +6,6 @@ import PropType from 'prop-types';
 
 class Folder extends Component {
 
-    static contextType = NotefulContext;
-
     static defaultProps = {
         folder: {},
     }
@@ -16,8 +14,8 @@ class Folder extends Component {
         folder: PropType.object.isRequired,
     }
 
-    handleClick = (id) => {
-        this.context.selectedFolder = id;
+    handleSelectFolder = (id) => {
+        this.props.onSelectFolder(id)
     }
 
     render() {
@@ -26,7 +24,7 @@ class Folder extends Component {
             <NavLink 
                 className="folder" 
                 to={`/folder/${folder.id}`} 
-                onClick={() => this.handleClick(folder.id)} 
+                onClick={() => this.handleSelectFolder(folder.id)} 
                 activeClassName="selected" >{folder.name}</NavLink>
         );
     }

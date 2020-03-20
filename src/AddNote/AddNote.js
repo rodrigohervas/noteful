@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import '../AddFolder/AddForm.css';
-import config, {generateId} from '../config/config';
+import config from '../config/config';
 import NotefulContext from '../contexts/NotefulContext';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import PropTypes from 'prop-types';
+import {withRouter} from 'react-router-dom'
 
 
 class AddNote extends Component {
@@ -71,14 +72,12 @@ class AddNote extends Component {
         e.preventDefault();
 
         const noteName = this.state.noteName.value;        
-        const id = generateId(noteName);
         const url = config.notesUrl;
         const date = new Date().toString();
         const note = {
-            id: id, 
             name: noteName, 
-            modified: date,
-            folderId: this.state.folderSelected.value,
+            date_modified: date,
+            folder_id: this.state.folderSelected.value,
             content: this.state.noteContent.value
         }
         const options = { 
@@ -99,9 +98,10 @@ class AddNote extends Component {
                 return response.json()
             })
             .then(data => {
-                this.context.addNote(data);
+                this.props.onAddNote(data);
                 this.context.inFocus = true;
-                this.props.history.push('/');
+                this.props.onSelectFolder(data.folder_id)
+                this.props.history.push(`/folder/${note.folder_id}`);
             })
             .catch(error => {
                 console.error(error);
@@ -136,7 +136,7 @@ class AddNote extends Component {
 
     render() {
 
-        const folders = this.context.folders;
+        const folders = this.props.folders;
 
         const options = folders.map( (folder) => 
                             <option key={folder.id} value={folder.id}> {folder.name} </option> );
@@ -209,4 +209,4 @@ class AddNote extends Component {
     }
 }
 
-export default AddNote;
+export default withRouter(AddNote);

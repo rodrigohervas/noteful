@@ -1,15 +1,12 @@
 import React, {Component} from 'react';
 import './Note.css';
 import {Link} from 'react-router-dom';
-import NotefulContext from '../contexts/NotefulContext';
 import config from '../config/config';
 import {withRouter} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 
 class Note extends Component {
-
-    static contextType = NotefulContext;
 
     static defaultProps = {
         note: {}, 
@@ -43,49 +40,43 @@ class Note extends Component {
                 }
                 return response.json()
             })
-            .then(data => {
-                //load the id into the context deleteNote function, to be able to use in App.js
-                this.context.deleteNote(id);
-                this.context.selectedNote = null;
-                this.props.history.push('/');
+            .then( () => {
+                this.props.onDeleteNote(id);
+                this.props.selectedNote = null;
+                this.props.history.push('/addnote');
             })
             .catch(error => {
                 console.error(error);
             })
     }
 
-    handleSelectedNote = (note) => {
-        this.context.selectedNote = note.id;
+    handleSelectNote = (id) => {
+        this.props.onSelectNote(id);
     }
 
     render() {
 
         let note = this.props.note;
-                
-        //if note is selected, render only that note
-        if(this.context.selectedNote) {
-            note = this.context.notes.find(note => note.id === this.context.selectedNote);
-        }
-        
+
         return(
             <div className="note">
-                {!this.context.selectedNote && 
+                {!this.props.selectedNote && 
                 <>
                 <h4>
                     <Link 
                         className="note-header"
                         to={`/note/${note.id}`} 
-                        onClick={() => this.handleSelectedNote(note)} >{note.name}</Link>
+                        onClick={() => this.handleSelectNote(note.id)} > {note.name} </Link>
                 </h4>
-                <p>Date modified: {note.modified}</p>
+                <p>Date modified: {note.date_modified}</p>
                 <button onClick={() => this.handleDelete(note.id)} >Delete</button>
                 </>
                 }
                 
-                {this.context.selectedNote &&  
+                {this.props.selectedNote &&  
                     <>    
                         <h4 className="note-header">{note.name}</h4>                
-                        <p>Date modified: {note.modified}</p>
+                        <p>Date modified: {note.date_modified}</p>
                         <button onClick={() => this.handleDelete(note.id)} >Delete</button>
                         <p className="note-content">{note.content}</p>
                     </> }

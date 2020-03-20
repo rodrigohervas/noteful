@@ -3,6 +3,7 @@ import Note from '../Note/Note';
 import NotefulContext from '../contexts/NotefulContext';
 import NotesError from '../ErrorBoundary/NotesError';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom'
 import './NotesList.css';
 
 class NotesList extends Component {
@@ -27,32 +28,28 @@ class NotesList extends Component {
 
     render() {
 
-        //if a folder was selected: get only notes for the selectedFolder
-        //if not, get all notes
-        const notes = this.context.notes;
-        let selectedNotes = this.context.selectedFolder 
-                                    ? notes.filter(note => note.folderId === this.context.selectedFolder) 
-                                    : notes;
-        
-        //get only a selectedNote
-        if(this.context.selectedNote) {
-            selectedNotes = notes.filter(note => note.id === this.context.selectedNote) 
-        }
+        const { notes, onDeleteNote, onSelectNote, selectedNote } = this.props;
         
         return(
             <NotesError>
                 <div className="notesList">
-                    {selectedNotes.map( (note) => <Note key={note.id} note={note} />)}
+                    {notes.map( (note) => <Note key={note.id} 
+                                                note={note} 
+                                                onDeleteNote={onDeleteNote} 
+                                                onSelectNote={onSelectNote}
+                                                selectedNote={selectedNote} />)}
 
                     <button 
-                    className="add-button" 
+                        className="add-button" 
                         type="button" 
-                        onClick={this.handleAddNote}
-                    >Add Note</button>
+                        onClick={this.handleAddNote} >
+                        Add Note
+                    </button>
                 </div>
             </NotesError>
         );
     }
 }
 
-export default NotesList;
+//export default NotesList;
+export default withRouter(NotesList);
