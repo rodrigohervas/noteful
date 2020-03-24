@@ -21,3 +21,7 @@ You can clone the following Nodejs server for a full stack noteful app:
     3. DB_URL=[YOUR_CONNECTION_STRING_HERE]
 7. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "noteful-server",`
 8. Modify the API endpoints in the noteful client at: ./src/config/config.js
+
+## Live Site
+
+https://notefulrh.now.sh/

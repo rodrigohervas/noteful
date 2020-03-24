@@ -72,7 +72,7 @@ class AddNote extends Component {
         e.preventDefault();
 
         const noteName = this.state.noteName.value;        
-        const url = config.notesUrl;
+        const url = config.REACT_APP_NOTES_URL;
         const date = new Date().toString();
         const note = {
             name: noteName, 

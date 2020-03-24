@@ -4,7 +4,6 @@ import { Route, Switch } from 'react-router-dom';
 import Nav from './Nav/Nav';
 import FoldersList from './FoldersList/FoldersList';
 import NotesList from './NotesList/NotesList';
-import NotefulContext from './contexts/NotefulContext';
 import config from './config/config';
 import AddFolder from './AddFolder/AddFolder';
 import AddNote from './AddNote/AddNote';
@@ -29,20 +28,23 @@ function App() {
       }
       return res.json()
     })
-    .then(data => callBackFunction(data))
+    .then(data => {
+      callBackFunction(data)
+      setError(null)
+    })
     .catch(error => setError(error))
   }
 
   useEffect( () => {
     //do 2 fetch actions to get folders and notes
-    getData(config.foldersUrl, setFolders)
-    getData(config.notesUrl, setNotes)
+    getData(config.REACT_APP_FOLDERS_URL, setFolders)
+    getData(config.REACT_APP_NOTES_URL, setNotes)
   }, [])
   
   //update state deleting the new folder
   const handleDeleteNote = (id) => {
-    const newNotes = notes.filter(note => note.id !== id);
-    setNotes(newNotes);
+    const newNotes = notes.filter(note => note.id !== id)
+    setNotes(newNotes)
   }
 
   //update state adding the new folder
@@ -64,6 +66,14 @@ function App() {
     setNotes(newNotes);
   }
 
+  const getFolderName = (selectedNote) => {
+    const note = notes.filter(note => note.id === selectedNote)[0]
+    if(note) {
+      return folders.filter(folder => folder.id === note.folder_id)[0].name
+    }
+    return null
+  }
+  
   return (
     <div className="App">
       <div className='container'>
@@ -79,16 +89,15 @@ function App() {
             <Route path='/folder/:id' >
               <FoldersList 
                 folders={folders}
-                selectedFolder={selectedFolder} 
                 onSelectFolder={handleSelectFolder}
               />
             </Route>
             
             <Route exact path='/note/:id' >
               <FoldersList
-                 folders={folders}
-                 selectedFolder={selectedFolder} 
-                 folderName={ folders.filter(folder => folder.id === selectedFolder).name }
+                 folders={folders} 
+                 onSelectFolder={handleSelectFolder}
+                 folderName={ selectedNote ? getFolderName(selectedNote) : null }
                  selectedNote={selectedNote} 
               />
             </Route>
@@ -96,7 +105,6 @@ function App() {
             <Route exact path='/' >
               <FoldersList 
                 folders={folders}
-                selectedFolder={selectedFolder} 
                 onSelectFolder={handleSelectFolder}
               />
             </Route>

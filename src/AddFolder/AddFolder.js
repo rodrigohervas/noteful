@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './AddForm.css';
-import config, {generateId} from '../config/config';
+import config from '../config/config';
 import NotefulContext from '../contexts/NotefulContext';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import PropTypes from 'prop-types';
@@ -46,7 +46,7 @@ class AddFolder extends Component {
         e.preventDefault();
 
         const folderName = this.state.folderName.value; 
-        const url = config.foldersUrl;
+        const url = config.REACT_APP_FOLDERS_URL;
         const folder = {
             name: folderName
         }

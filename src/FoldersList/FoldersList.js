@@ -50,21 +50,19 @@ class FoldersList extends Component {
     }
 
     handleAddFolder = () => {
-        console.log('goto /addfolder')
-        console.log(this.props.history)
         this.props.history.push('/addfolder');
     }
 
     render() {
         
-        const { folders, onSelectFolder, selectedFolder, selectedNote, folderName } = this.props
+        const { folders, onSelectFolder, selectedNote, folderName } = this.props
         
         return(
             <NotesError>
                 <div className="foldersList">
                     
                     {/* render folders */}
-                    {(folders) && 
+                    {(folders) && !selectedNote && 
                         folders.map( (folder) => <Folder 
                                                     key={folder.id} 
                                                     folder={folder} 
@@ -72,19 +70,20 @@ class FoldersList extends Component {
                                             ) }
 
                     {/* render Add folder button */}
-                    {(folders.length > 1) && 
+                    {(folders.length > 1) && !selectedNote && 
                         <button
                             className="add-button" 
                             type="button" 
                             onClick={this.handleAddFolder }
                             >Add folder</button>}
 
-                    {/* mark the selected folder as selected */}
-                    {folders.length === 0  && 
+                    {/* render the selected folder name and 'Go Back' button */}
+                    {selectedNote  && 
                         <div>
                             <button type="button" 
                                 onClick={ this.handleGoBack } 
                                 >Go Back</button> 
+                            {/* <h3>{ folders.filter(folder => folder.id === selectedFolder).name }</h3> */}
                             <h3>{folderName}</h3>
                         </div> }
                 </div>

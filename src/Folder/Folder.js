@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import {NavLink} from 'react-router-dom';
+import {NavLink, withRouter} from 'react-router-dom';
 import './Folder.css';
-import NotefulContext from '../contexts/NotefulContext';
 import PropType from 'prop-types';
 
 class Folder extends Component {
@@ -30,4 +29,4 @@ class Folder extends Component {
     }
 }
 
-export default Folder;
+export default withRouter(Folder);

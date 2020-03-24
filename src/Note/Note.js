@@ -23,7 +23,7 @@ class Note extends Component {
     }
 
     handleDelete = (id) => {
-        const url = `${config.notesUrl}/${id}`;
+        const url = `${config.REACT_APP_NOTES_URL}/${id}`;
         const options = { 
             method: 'DELETE',
             headers: {
@@ -41,9 +41,8 @@ class Note extends Component {
                 return response.json()
             })
             .then( () => {
+                this.props.history.push('/');
                 this.props.onDeleteNote(id);
-                this.props.selectedNote = null;
-                this.props.history.push('/addnote');
             })
             .catch(error => {
                 console.error(error);
